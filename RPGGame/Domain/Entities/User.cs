@@ -8,12 +8,13 @@ namespace RPGGame.Domain.Entities
 {
     internal class User
     {
+        public int ID { get; set; }
         public string Name { get; set; }
-        public int Race { get; set; }
-        public int Class { get; set; }
+        public int RaceID { get; set; }
+        public int ClassID { get; set; }
         public string Level { get; set; }
 
-        public Race RaceID { get; set; }
-        public Class ClassID { get; set; }
+        public Race Race { get; set; }
+        public Class Class { get; set; }
     }
 }

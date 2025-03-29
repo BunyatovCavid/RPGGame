@@ -10,5 +10,6 @@ namespace RPGGame.Domain.Entities
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public Card Card { get; set; }
     }
 }

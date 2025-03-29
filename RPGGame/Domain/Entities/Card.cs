@@ -10,12 +10,12 @@ namespace RPGGame.Domain.Entities
 {
     internal class Card
     {
-        [Key]
         public string Name { get; set; }
-        public int CardType { get; set; }
+        public int CardTypeID { get; set; }
         public string Description { get; set; }
 
-        public CardType CardTypeID { get; set; }
+        public Inventory Inventory { get; set; }
+        public CardType CardType { get; set; }
 
     }
 }
