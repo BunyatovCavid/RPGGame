@@ -14,34 +14,48 @@ namespace RPGGame
     {
         static async Task Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) =>{
+                var exception = (Exception)args.ExceptionObject;
+                Log.Fatal(exception, "Tətbiqdə tutulmamış xəta baş verdi!");
+                Log.CloseAndFlush();
+            };
 
-            using IHost host = Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, config) =>
-                {
-                    config.AddJsonFile("appsettings.json", false, false);
-                })
-                .UseSerilog((context, config) =>
-                {
-                    config.ReadFrom.Configuration(context.Configuration);
-                })
-                .ConfigureServices((context, services) =>
-                  {
-                      var configuration = context.Configuration;
-
-                      services.AddDbContext<RPGDbContext>(options =>
+            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            {
+                Log.Fatal(e.Exception, "Fire-and-forget və ya background Task xətası baş verdi.");
+                e.SetObserved();
+            };
+            try
+            {
+                using IHost host = Host.CreateDefaultBuilder(args)
+                    .ConfigureAppConfiguration((context, config) =>
+                    {
+                        config.AddJsonFile("appsettings.json", false, false);
+                    })
+                    .UseSerilog((context, config) =>
+                    {
+                        config.ReadFrom.Configuration(context.Configuration);
+                    })
+                    .ConfigureServices((context, services) =>
                       {
-                          options.UseSqlServer(configuration.GetConnectionString("RPG")); 
-                      });
+                          var configuration = context.Configuration;
 
-                      services.AddLogging();
+                          services.AddDbContext<RPGDbContext>(options =>
+                          {
+                              options.UseSqlServer(configuration.GetConnectionString("RPG"));
+                          });
 
-                      services.AddSingleton<ISelectingService, SelectingService>();
-                  }
-                ).Build();
+                          services.AddLogging();
 
-            await Log.CloseAndFlushAsync();
-            await host.RunAsync();
-      
+                          services.AddSingleton<ISelectingService, SelectingService>();
+                      }
+                    ).Build();
+
+
+                await host.RunAsync();
+            }
+            catch (Exception ex) { Log.Fatal(ex, "Tətbiq gözlənilmədən dayandı!"); }
+            finally { await Log.CloseAndFlushAsync(); }
         }
     }
 }
