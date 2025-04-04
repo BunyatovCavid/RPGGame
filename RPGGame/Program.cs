@@ -4,13 +4,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RPGGame.Domain;
+using RPGGame.Interfaces;
+using RPGGame.Services;
 using Serilog;
 
 namespace RPGGame
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
 
             using IHost host = Host.CreateDefaultBuilder(args)
@@ -32,12 +34,13 @@ namespace RPGGame
                       });
 
                       services.AddLogging();
-          
+
+                      services.AddSingleton<ISelectingService, SelectingService>();
                   }
                 ).Build();
 
-            Log.CloseAndFlush();
-            host.Run();
+            await Log.CloseAndFlushAsync();
+            await host.RunAsync();
       
         }
     }
