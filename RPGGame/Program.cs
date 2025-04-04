@@ -36,9 +36,9 @@ namespace RPGGame
                   }
                 ).Build();
 
-
+            Log.CloseAndFlush();
             host.Run();
-            
+      
         }
     }
 }
