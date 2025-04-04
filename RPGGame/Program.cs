@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RPGGame.Domain;
-
+using Serilog;
 
 namespace RPGGame
 {
@@ -12,10 +12,15 @@ namespace RPGGame
     {
         static void Main(string[] args)
         {
+
             using IHost host = Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, config) =>
                 {
-                    config.AddJsonFile("appsetting.json", false, false);
+                    config.AddJsonFile("appsettings.json", false, false);
+                })
+                .UseSerilog((context, config) =>
+                {
+                    config.ReadFrom.Configuration(context.Configuration);
                 })
                 .ConfigureServices((context, services) =>
                   {
@@ -26,19 +31,14 @@ namespace RPGGame
                           options.UseSqlServer(configuration.GetConnectionString("RPG")); 
                       });
 
-                      services.AddLogging(logging =>
-                      {
-                          logging.ClearProviders();
-                          logging.AddConsole();
-                          logging.SetMinimumLevel(LogLevel.Information);
-
-                          logging.AddFilter("Microsoft", LogLevel.Warning);
-                          logging.AddFilter("System", LogLevel.Error);
-                      });
+                      services.AddLogging();
           
                   }
                 ).Build();
 
+
+            host.Run();
+            
         }
     }
 }
