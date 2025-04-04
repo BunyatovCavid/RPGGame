@@ -23,7 +23,7 @@ namespace RPGGame
             TaskScheduler.UnobservedTaskException += (sender, e) =>
             {
                 Log.Fatal(e.Exception, "Fire-and-forget və ya background Task xətası baş verdi.");
-                e.SetObserved();
+                e.SetObserved(); 
             };
             try
             {
