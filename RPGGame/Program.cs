@@ -14,6 +14,8 @@ namespace RPGGame
     {
         static async Task Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>{
                 var exception = (Exception)args.ExceptionObject;
                 Log.Fatal(exception, "Tətbiqdə tutulmamış xəta baş verdi!");
@@ -50,8 +52,10 @@ namespace RPGGame
                           services.AddSingleton<ISelectingService, SelectingService>();
                       }
                     ).Build();
-
-
+                var service = host.Services.GetRequiredService<ISelectingService>();
+                var a = await service.Choose("A","B","C");
+               
+                
                 await host.RunAsync();
             }
             catch (Exception ex) { Log.Fatal(ex, "Tətbiq gözlənilmədən dayandı!"); }

@@ -24,7 +24,7 @@ namespace RPGGame.Services
             try
             {
                 int index = 0;
-                string prefix = "►";
+                string prefix = "\u25B6"; //"►"
                 ConsoleKeyInfo keyinfo;
                 do
                 {
@@ -35,8 +35,8 @@ namespace RPGGame.Services
                         {
                             Console.ForegroundColor = ConsoleColor.Black;
                             Console.BackgroundColor = ConsoleColor.White;
-                            Console.WriteLine(prefix + $"{i + 1}. "
-                            + options[i]);
+                            Console.WriteLine(prefix + " "+ "~"
+                            + options[i] + "~");
                         }
                         else
                         {
